@@ -10,6 +10,8 @@ export const ModalEditForm = ({setTodos, task, isModalOpen, setIsModalOpen, form
             ));
             setIsModalOpen(false);
             message.success("Задача обновлена!");
+        }).catch(error => {
+            message.error(error.message || "Ошибка при обновлении задачи");
         })
     }
     const okHandler = () => {
@@ -31,7 +33,7 @@ export const ModalEditForm = ({setTodos, task, isModalOpen, setIsModalOpen, form
         >
             <Form form={form} layout="vertical" onFinish={onFinishEdit}>
                 <Form.Item
-                    label="Title"
+                    label="Название"
                     name="title"
                     rules={[{required: true, message: 'Please input task title!'}]}
                 >
@@ -39,7 +41,7 @@ export const ModalEditForm = ({setTodos, task, isModalOpen, setIsModalOpen, form
                 </Form.Item>
 
                 <Form.Item
-                    label="Description"
+                    label="Описание"
                     name="description"
                     rules={[{required: true, message: 'Please input task description!'}]}
                 >

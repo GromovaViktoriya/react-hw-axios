@@ -1,22 +1,25 @@
-import {Button, Form, Input} from "antd";
-import {useContext} from "react";
-import {ErrorContext} from "../../context/ErrorContext.js";
+import {Button, Form, Input, message} from "antd";
 import {createItem} from "../../shared/api/apiMethods.js";
 
 export const CreateItemForm = ({setTodos}) => {
-    const {setError} = useContext(ErrorContext)
+    const [form] = Form.useForm();
 
     const onFinish = (values) => {
         createItem(values).then((newTask) => {
-            setTodos(prev => [...prev, newTask]);
+            setTodos(prev => [newTask, ...prev]);
+            form.resetFields();
+            message.success('Задача создана успешно!')
+        }).catch((error) => {
+            message.error(error.message);
         })
     }
     const onFinishFailed = (error) => {
-        setError(error)
+      message.error(error.message);
     }
 
     return (
         <Form
+            form={form}
             name="createItemForm"
             labelCol={{span: 8}}
             wrapperCol={{span: 16}}
@@ -26,17 +29,17 @@ export const CreateItemForm = ({setTodos}) => {
             autoComplete="off"
         >
             <Form.Item
-                label="Title"
+                label="Название"
                 name="title"
-                rules={[{required: true, message: 'Please input task title!'}]}
+                rules={[{required: true, message: 'Введите название задачи.'}]}
             >
                 <Input/>
             </Form.Item>
 
             <Form.Item
-                label="Description"
+                label="Описание"
                 name="description"
-                rules={[{required: true, message: 'Please input task description!'}]}
+                rules={[{required: true, message: 'Введите описание задачи.'}]}
             >
                 <Input/>
             </Form.Item>

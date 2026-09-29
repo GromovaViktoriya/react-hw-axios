@@ -5,7 +5,7 @@ export const register = async (values) => {
         const response = await axiosInstance.post(`/api/auth/register`, values);
         return response.data;
     } catch (error) {
-        return error;
+        return Promise.reject(error);
     }
 }
 
@@ -14,7 +14,7 @@ export const login = async (values) => {
         const response = await axiosInstance.post(`/api/auth/login`, values);
         return response.data;
     } catch (error) {
-        return error;
+        return Promise.reject(error);
     }
 }
 
@@ -23,7 +23,7 @@ export const fetchData = async () => {
         const response = await axiosInstance.get('/api/todos')
         return response.data;
     } catch (error) {
-        return error;
+        return Promise.reject(error);
     }
 }
 
@@ -31,7 +31,7 @@ export const deleteItem = async (taskId) => {
     try {
         await axiosInstance.delete(`/api/todos/${taskId}`);
     } catch (error) {
-        return error;
+        return Promise.reject(error);
     }
 }
 
@@ -40,7 +40,7 @@ export const createItem = async (value) => {
        const response = await axiosInstance.post(`/api/todos`, value);
        return response.data;
     } catch (error) {
-        return error;
+        return Promise.reject(error);
     }
 }
 
@@ -49,7 +49,7 @@ export const getItemById = async (taskId) => {
         const response = await axiosInstance.get(`/api/todos/${taskId}`);
         return response.data;
     } catch (error) {
-        return error;
+        return Promise.reject(error);
     }
 }
 
@@ -57,7 +57,7 @@ export const updateItem = async (taskId, values) => {
     try {
         await axiosInstance.patch(`/api/todos/${taskId}`, values);
     } catch (error) {
-        return error;
+        return Promise.reject(error);
     }
 }
 
@@ -66,7 +66,7 @@ export const toggleTaskStatus = async (taskId) => {
        const response = await axiosInstance.patch(`/api/todos/${taskId}/toggle`);
        return response.data;
     } catch (error) {
-        return error;
+        return Promise.reject(error);
     }
 }
 

@@ -1,22 +1,22 @@
-import {Button, Form, Input} from "antd";
-import {Link} from "react-router";
-import {useContext} from "react";
-import {ErrorContext} from "../../context/ErrorContext.js";
+import {Button, Form, Input, message} from "antd";
+import {Link, useNavigate} from "react-router";
 import {register} from "../../shared/api/apiMethods.js";
 
 export const Auth = ()=>{
-    const {setError} = useContext(ErrorContext);
+    const navigate = useNavigate();
 
     const onFinish = values => {
         register(values).then(res => {
             document.cookie = `access_token=${res.access_token}`
+            message.success('Регистрация проведена успешно!')
+            navigate('/dashboard');
         }).catch(error => {
-            setError(error.message);
+            message.error(error.message);
         })
     };
 
     const onFinishFailed = errorInfo => {
-        setError(errorInfo);
+       message.error(errorInfo);
     };
 
     return (
@@ -27,13 +27,13 @@ export const Auth = ()=>{
             style={{ maxWidth: 500 }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
-            autoComplete="off"
+            autoComplete="on"
         >
 
             <Form.Item
-                label="Name"
+                label="Имя"
                 name="name"
-                rules={[{ required: true, message: 'Please input your name!' }]}
+                rules={[{ required: true, message: 'Введите ваше имя.' }]}
             >
                 <Input />
             </Form.Item>
@@ -41,22 +41,22 @@ export const Auth = ()=>{
                 label="Email"
                 name="email"
                 type="email"
-                rules={[{ required: true, message: 'Please input your email!' }]}
+                rules={[{ required: true, message: 'Введите ваш email.' }]}
             >
                 <Input />
             </Form.Item>
 
             <Form.Item
-                label="Password"
+                label="Пароль"
                 name="password"
-                rules={[{ required: true, message: 'Please input your password!' , min: 6 }]}
+                rules={[{ required: true, message: 'Введите ваш пароль.' , min: 6 }]}
             >
                 <Input.Password />
             </Form.Item>
 
             <Form.Item label={null}>
                 <Button type="primary" htmlType="submit">
-                    Submit
+                    Отправить
                 </Button>
             </Form.Item>
 

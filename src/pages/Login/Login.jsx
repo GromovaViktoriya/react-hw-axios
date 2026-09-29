@@ -1,24 +1,21 @@
-import {Button, Form, Input} from "antd";
-import {useContext} from "react";
-import {ErrorContext} from "../../context/ErrorContext.js";
+import {Button, Form, Input, message} from "antd";
 import {Link, useNavigate} from "react-router";
 import {login} from "../../shared/api/apiMethods.js";
 
 export const Login = () => {
-    const {setError} = useContext(ErrorContext);
-   const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const onFinish = values => {
         login(values).then(res => {
             document.cookie = `access_token=${res.access_token}`
             navigate('/dashboard');
         }).catch(error => {
-            setError(error.message);
+            message.error(error.message);
         })
     };
 
     const onFinishFailed = errorInfo => {
-        setError(errorInfo);
+        message.error(errorInfo);
     };
 
     return (
@@ -29,28 +26,28 @@ export const Login = () => {
             style={{maxWidth: 500}}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
-            autoComplete="off"
+            autoComplete="on"
         >
             <Form.Item
                 label="Email"
                 name="email"
                 type="email"
-                rules={[{required: true, message: 'Please input your username!'}]}
+                rules={[{required: true, message: 'Введите ваш email.'}]}
             >
                 <Input/>
             </Form.Item>
 
             <Form.Item
-                label="Password"
+                label="Пароль"
                 name="password"
-                rules={[{required: true, message: 'Please input your password!'}]}
+                rules={[{required: true, message: 'Введите ваш пароль.'}]}
             >
                 <Input.Password/>
             </Form.Item>
 
             <Form.Item label={null}>
                 <Button type="primary" htmlType="submit">
-                    Submit
+                    Отправить
                 </Button>
             </Form.Item>
             <Form.Item label={null}>
