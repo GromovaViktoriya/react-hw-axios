@@ -1,17 +1,22 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Task} from "../../components/Task/Task.jsx";
 import {fetchData} from "../../shared/api/apiMethods.js";
 import {CreateItemForm} from "../../components/CreateItemForm/CreateItemForm.jsx";
-import {message} from "antd";
+import {message, Spin} from "antd";
+import {LoadingContext} from "../../context/LoadingContext.js";
 
 export const Dashboard = () => {
     const [todos, setTodos] = useState([]);
+    const {isLoading, setIsLoading} = useContext(LoadingContext);
 
     useEffect(() => {
+        setIsLoading(true)
         fetchData().then((res) => {
             setTodos(res.data);
         }).catch((err) => {
             message.error(err.message);
+        }).finally(() => {
+            setIsLoading(false);
         })
     }, [])
 
@@ -20,11 +25,13 @@ export const Dashboard = () => {
         <div className="dashboard">
             Dashboard
             <CreateItemForm setTodos={setTodos}/>
-            <ul className='dashboard-list'>
-                {todos.map(task => {
-                    return <li key={task.id}><Task task={task} setTodos={setTodos}/></li>
-                })}
-            </ul>
+            {isLoading ?
+                (<Spin size="large" style={{marginTop: '50px'}}/>)
+                : (<ul className='dashboard-list'>
+                    {todos.map(task => {
+                        return <li key={task.id}><Task task={task} setTodos={setTodos}/></li>
+                    })}
+                </ul>)}
         </div>
     )
 }

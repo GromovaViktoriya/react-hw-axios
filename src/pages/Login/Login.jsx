@@ -3,18 +3,23 @@ import {Link, useNavigate} from "react-router";
 import {login} from "../../shared/api/apiMethods.js";
 import {useContext} from "react";
 import {LoginContext} from "../../context/LoginContext.js";
+import {LoadingContext} from "../../context/LoadingContext.js";
 
 export const Login = () => {
     const {setIsLoggedIn} = useContext(LoginContext);
+    const {isLoading, setIsLoading} = useContext(LoadingContext);
     const navigate = useNavigate();
 
     const onFinish = values => {
+        setIsLoading(true)
         login(values).then(res => {
             document.cookie = `access_token=${res.access_token}`
-            setIsLoggedIn(true)
+            setIsLoggedIn()
             navigate('/dashboard');
         }).catch(error => {
             message.error(error.message);
+        }).finally(()=>{
+            setIsLoading(false)
         })
     };
 
@@ -52,7 +57,7 @@ export const Login = () => {
                 </Form.Item>
 
                 <Form.Item label={null}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={isLoading}>
                         Отправить
                     </Button>
                 </Form.Item>

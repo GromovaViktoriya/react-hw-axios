@@ -10,7 +10,7 @@ export const HeaderComponent = () => {
 const navigate = useNavigate();
 
     const handleLogout = () => {
-        setIsLoggedIn(false);
+        setIsLoggedIn();
         document.cookie =  "access_token=; Max-Age=0; path=/;"
         navigate('/')
     }
@@ -30,7 +30,6 @@ const navigate = useNavigate();
                 </div>
                 : <p className='logout-text'>Необходимо авторизоваться.</p>
             }
-
         </Header>
     )
 }

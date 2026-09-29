@@ -1,15 +1,18 @@
 import {Card, Form, message, Popconfirm, Tag} from "antd";
 import {CheckOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {deleteItem, getItemById, toggleTaskStatus} from "../../shared/api/apiMethods.js";
 import {ModalEditForm} from "../ModalEditForm/ModalEditForm.jsx";
+import {LoadingContext} from "../../context/LoadingContext.js";
 
 export const Task = ({task, setTodos}) => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const {isLoading, setIsLoading} = useContext(LoadingContext);
 
 
     const editHandler = () => {
+        setIsLoading(true)
         getItemById(task.id).then((res) => {
             form.setFieldsValue({
                 title: res.title,
@@ -18,11 +21,14 @@ export const Task = ({task, setTodos}) => {
             })
         }).catch((error) => {
             message.error(error.message);
+        }).finally(() => {
+            setIsLoading(false)
         })
         setIsModalOpen(true);
     }
 
     const checkHandler = () => {
+        setIsLoading(true)
         toggleTaskStatus(task.id).then((task) => {
             setTodos(prev => prev.map(item =>
                 item.id === task.id ? {...item, completed: !item.completed} : item
@@ -30,15 +36,20 @@ export const Task = ({task, setTodos}) => {
             message.success('Статус задачи изменён');
         }).catch((error) => {
             message.error(error.message);
+        }).finally(() => {
+            setIsLoading(false)
         })
     }
 
     const handleConfirm = ()=>{
+        setIsLoading(true)
       deleteItem(task.id).then(()=>{
          setTodos(prev => prev.filter(item => item.id !== task.id))
           message.success('Задача удалена!');
       }).catch((error) => {
           message.error(error.message);
+      }).finally(() => {
+          setIsLoading(false)
       })
     }
 
@@ -55,10 +66,10 @@ export const Task = ({task, setTodos}) => {
                         onConfirm={handleConfirm}
                         okText="Да"
                         cancelText="Нет"
+                        okButtonProps={{ loading: isLoading }}
                     >
                         <DeleteOutlined key='bucket'/>
-                    </Popconfirm>
-                    ,
+                    </Popconfirm>,
                     <EditOutlined key='edit' onClick={editHandler}/>,
                     <CheckOutlined key='check' onClick={checkHandler}/>
                 ]}>
