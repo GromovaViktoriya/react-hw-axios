@@ -63,7 +63,7 @@ export const Task = ({task, setTodos}) => {
                     <CheckOutlined key='check' onClick={checkHandler}/>
                 ]}>
                 <p className='card-description'>{task.description}</p>
-                {task.completed && <Tag color='green' variant='outlined'>Выполнено</Tag>}
+                {task.completed && <Tag color='green' variant='outlined' className='tag'>Выполнено</Tag>}
             </Card>
             <ModalEditForm form={form}
                            setTodos={setTodos}

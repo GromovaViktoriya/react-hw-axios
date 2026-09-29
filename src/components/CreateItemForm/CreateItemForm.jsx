@@ -46,7 +46,7 @@ export const CreateItemForm = ({setTodos}) => {
 
             <Form.Item label={null}>
                 <Button type="primary" htmlType="submit">
-                    Create
+                    Создать
                 </Button>
             </Form.Item>
         </Form>

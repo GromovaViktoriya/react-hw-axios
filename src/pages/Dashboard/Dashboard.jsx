@@ -17,7 +17,7 @@ export const Dashboard = () => {
 
 
     return (
-        <div>
+        <div className="dashboard">
             Dashboard
             <CreateItemForm setTodos={setTodos}/>
             <ul className='dashboard-list'>
