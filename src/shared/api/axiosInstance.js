@@ -22,7 +22,7 @@ axiosInstance.interceptors.response.use(response => {
     return response;
 }, error => {
     if (error.response.status === 401) {
-        return Promise.reject(error);
+        document.cookie = "access_token=; Max-Age=0; path=/;"
     }
     return Promise.reject(error);
 });

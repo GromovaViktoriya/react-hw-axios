@@ -60,7 +60,7 @@ export const Login = () => {
                 </Form.Item>
 
                 <Form.Item label={null}>
-                    <Button type="primary" htmlType="submit" loading={isLoading}>
+                    <Button type="primary" htmlType="submit" loading={isLoading} disabled={isLoading}>
                         Отправить
                     </Button>
                 </Form.Item>

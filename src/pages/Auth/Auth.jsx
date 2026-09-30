@@ -68,7 +68,7 @@ export const Auth = () => {
                 </Form.Item>
 
                 <Form.Item label={null}>
-                    <Button type="primary" htmlType="submit" loading={isLoading}>
+                    <Button type="primary" htmlType="submit" loading={isLoading} disabled={isLoading}>
                         Зарегистрироваться
                     </Button>
                 </Form.Item>

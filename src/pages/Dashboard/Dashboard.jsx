@@ -2,7 +2,7 @@ import {useContext, useEffect, useState} from "react";
 import {Task} from "../../components/Task/Task.jsx";
 import {fetchData} from "../../shared/api/apiMethods.js";
 import {CreateItemForm} from "../../components/CreateItemForm/CreateItemForm.jsx";
-import {message, Spin} from "antd";
+import {Empty, message, Spin} from "antd";
 import {LoadingContext} from "../../context/LoadingContext.js";
 
 export const Dashboard = () => {
@@ -28,10 +28,13 @@ export const Dashboard = () => {
             {isLoading ?
                 (<Spin size="large" style={{marginTop: '50px'}}/>)
                 : (<ul className='dashboard-list'>
-                    {todos.map(task => {
+                    {todos.length !== 0 && todos.map(task => {
                         return <li key={task.id}><Task task={task} setTodos={setTodos}/></li>
                     })}
-                </ul>)}
+                    {todos.length === 0 && <Empty description='Создайте первую задачу'/>}
+                </ul>)
+            }
+
         </div>
     )
 }
