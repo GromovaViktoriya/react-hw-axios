@@ -1,14 +1,14 @@
 import {Routing} from "./components/routing/Routing.jsx";
 import {Layout} from "antd";
-import {Footer} from "antd/es/layout/layout.js";
 import {useState} from "react";
 import {LoginContext} from "./context/LoginContext.js";
 import {HeaderComponent} from "./components/HeaderComponent/HeaderComponent.jsx";
 import {LoadingContext} from "./context/LoadingContext.js";
+const {Footer} = Layout;
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     return (
         <div className="App">

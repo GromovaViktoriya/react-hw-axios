@@ -1,6 +1,6 @@
 import {Button, Form, Input, message} from "antd";
 import {Link, useNavigate} from "react-router";
-import {login} from "../../shared/api/apiMethods.js";
+import {authMe, login} from "../../shared/api/apiMethods.js";
 import {useContext} from "react";
 import {LoginContext} from "../../context/LoginContext.js";
 import {LoadingContext} from "../../context/LoadingContext.js";
@@ -14,11 +14,14 @@ export const Login = () => {
         setIsLoading(true)
         login(values).then(res => {
             document.cookie = `access_token=${res.access_token}`
-            setIsLoggedIn()
+            setIsLoggedIn(true)
+            return authMe();
+        }).then((userData)=>{
             navigate('/dashboard');
+            localStorage.setItem("userName", userData.name);
         }).catch(error => {
             message.error(error.message);
-        }).finally(()=>{
+        }).finally(() => {
             setIsLoading(false)
         })
     };
@@ -38,7 +41,7 @@ export const Login = () => {
                 onFinishFailed={onFinishFailed}
                 autoComplete="on"
             >
-                <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>Вход</h2>
+                <h2 style={{textAlign: 'center', marginBottom: '24px'}}>Вход</h2>
                 <Form.Item
                     label="Email"
                     name="email"

@@ -1,14 +1,20 @@
 import {Route, Routes} from "react-router";
-import {Login} from "../../pages/Login/Login.jsx";
-import {Dashboard} from "../../pages/Dashboard/Dashboard.jsx";
-import {Auth} from "../../pages/Auth/Auth.jsx";
+import React, {Suspense} from "react";
+import {Spin} from "antd";
 
-export const Routing = () => {
+const Login = React.lazy(()=> import("../../pages/Login/Login.jsx")
+    .then((module) => ({default:module.Login})))
+const Dashboard = React.lazy(()=> import("../../pages/Dashboard/Dashboard.jsx")
+    .then((module) => ({default:module.Dashboard})))
+const Auth = React.lazy(()=> import("../../pages/Auth/Auth.jsx")
+    .then((module) => ({default:module.Auth})))
+
+export const Routing = ({ setUserName}) => {
     return (
         <Routes>
-            <Route path={'/'} element={<Login/>} />
-            <Route path={'/dashboard'} element={<Dashboard />} />
-            <Route path={'/auth'} element={<Auth />} />
+            <Route path={'/'} element={ <Suspense fallback={<Spin/>}><Login setUserName={setUserName}/></Suspense>} />
+            <Route path={'/dashboard'} element={ <Suspense fallback={<Spin/>}><Dashboard /></Suspense>} />
+            <Route path={'/auth'} element={<Suspense fallback={<Spin/>}><Auth /></Suspense>}/>
         </Routes>
     )
 }

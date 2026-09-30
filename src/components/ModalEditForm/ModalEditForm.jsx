@@ -30,6 +30,7 @@ export const ModalEditForm = ({setTodos, task, isModalOpen, setIsModalOpen, form
             okText="Сохранить"
             cancelText="Отмена"
             width={350}
+            forceRender
         >
             <Form form={form} layout="vertical" onFinish={onFinishEdit}>
                 <Form.Item

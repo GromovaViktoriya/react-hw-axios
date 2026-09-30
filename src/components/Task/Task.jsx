@@ -1,14 +1,13 @@
 import {Card, Form, message, Popconfirm, Tag} from "antd";
 import {CheckOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
-import {useContext, useState} from "react";
+import {useState} from "react";
 import {deleteItem, getItemById, toggleTaskStatus} from "../../shared/api/apiMethods.js";
 import {ModalEditForm} from "../ModalEditForm/ModalEditForm.jsx";
-import {LoadingContext} from "../../context/LoadingContext.js";
 
 export const Task = ({task, setTodos}) => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const {isLoading, setIsLoading} = useContext(LoadingContext);
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const editHandler = () => {
@@ -41,16 +40,16 @@ export const Task = ({task, setTodos}) => {
         })
     }
 
-    const handleConfirm = ()=>{
+    const handleConfirm = () => {
         setIsLoading(true)
-      deleteItem(task.id).then(()=>{
-         setTodos(prev => prev.filter(item => item.id !== task.id))
-          message.success('Задача удалена!');
-      }).catch((error) => {
-          message.error(error.message);
-      }).finally(() => {
-          setIsLoading(false)
-      })
+        deleteItem(task.id).then(() => {
+            setTodos(prev => prev.filter(item => item.id !== task.id))
+            message.success('Задача удалена!');
+        }).catch((error) => {
+            message.error(error.message);
+        }).finally(() => {
+            setIsLoading(false)
+        })
     }
 
     return (
@@ -66,7 +65,7 @@ export const Task = ({task, setTodos}) => {
                         onConfirm={handleConfirm}
                         okText="Да"
                         cancelText="Нет"
-                        okButtonProps={{ loading: isLoading }}
+                        okButtonProps={{loading: isLoading}}
                     >
                         <DeleteOutlined key='bucket'/>
                     </Popconfirm>,
