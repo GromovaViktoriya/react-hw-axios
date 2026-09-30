@@ -31,8 +31,13 @@ export const ModalEditForm = ({setTodos, task, isModalOpen, setIsModalOpen, form
             cancelText="Отмена"
             width={350}
             forceRender
+            styles={{
+                content: {
+                    color: 'var(--text)'
+                }
+            }}
         >
-            <Form form={form} layout="vertical" onFinish={onFinishEdit}>
+            <Form form={form} layout="vertical" onFinish={onFinishEdit} className="modal-edit-form">
                 <Form.Item
                     label="Название"
                     name="title"
