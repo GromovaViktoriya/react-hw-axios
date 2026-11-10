@@ -1,29 +1,20 @@
 import {Button, Form, Input, message} from "antd";
 import {Link, useNavigate} from "react-router";
-import {authMe, login} from "../../shared/api/apiMethods.js";
-import {useContext} from "react";
-import {LoginContext} from "../../context/LoginContext.js";
-import {LoadingContext} from "../../context/LoadingContext.js";
+import {useLogin} from "../../shared/hooks/useAuth.js";
 
 export const Login = () => {
-    const {setIsLoggedIn} = useContext(LoginContext);
-    const {isLoading, setIsLoading} = useContext(LoadingContext);
     const navigate = useNavigate();
+    const {mutate:loginUser, isPending} = useLogin()
 
     const onFinish = values => {
-        setIsLoading(true)
-        login(values).then(res => {
-            document.cookie = `access_token=${res.access_token}`
-            setIsLoggedIn(true)
-            return authMe();
-        }).then((userData)=>{
-            navigate('/dashboard');
-            localStorage.setItem("userName", userData.name);
-        }).catch(error => {
-            message.error(error.message);
-        }).finally(() => {
-            setIsLoading(false)
-        })
+        loginUser(values, {
+            onSuccess: () => {
+                navigate('/dashboard');
+            },
+            onError: (error) => {
+                message.error(error.message);
+            }
+        });
     };
 
     const onFinishFailed = errorInfo => {
@@ -60,7 +51,7 @@ export const Login = () => {
                 </Form.Item>
 
                 <Form.Item label={null}>
-                    <Button type="primary" htmlType="submit" loading={isLoading} disabled={isLoading}>
+                    <Button type="primary" htmlType="submit" loading={isPending} disabled={isPending}>
                         Отправить
                     </Button>
                 </Form.Item>

@@ -1,30 +1,21 @@
 import {Button, Form, Input, message} from "antd";
 import {Link, useNavigate} from "react-router";
-import {authMe, register} from "../../shared/api/apiMethods.js";
-import {useContext} from "react";
-import {LoginContext} from "../../context/LoginContext.js";
-import {LoadingContext} from "../../context/LoadingContext.js";
+import {useRegister} from "../../shared/hooks/useAuth.js";
 
 export const Auth = () => {
-    const {setIsLoggedIn} = useContext(LoginContext);
-    const {isLoading, setIsLoading} = useContext(LoadingContext);
     const navigate = useNavigate();
+    const { mutate: registerUser, isPending } = useRegister();
 
     const onFinish = values => {
-        setIsLoading(true)
-        register(values).then(res => {
-            document.cookie = `access_token=${res.access_token}`
-            message.success('Регистрация проведена успешно!')
-            setIsLoggedIn(true)
-            return authMe()
-        }).then((userData) => {
-            localStorage.setItem('userName', userData.name)
-            navigate('/dashboard');
-        }).catch(error => {
-            message.error(error.message);
-        }).finally(() => {
-            setIsLoading(false)
-        })
+        registerUser(values, {
+            onSuccess: () => {
+                message.success('Регистрация проведена успешно!');
+                navigate('/dashboard');
+            },
+            onError: (error) => {
+                message.error(error.message);
+            }
+        });
     };
 
     const onFinishFailed = errorInfo => {
@@ -68,7 +59,7 @@ export const Auth = () => {
                 </Form.Item>
 
                 <Form.Item label={null}>
-                    <Button type="primary" htmlType="submit" loading={isLoading} disabled={isLoading}>
+                    <Button type="primary" htmlType="submit" loading={isPending} disabled={isPending}>
                         Зарегистрироваться
                     </Button>
                 </Form.Item>

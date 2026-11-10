@@ -1,19 +1,11 @@
 import {Routing} from "./components/routing/Routing.jsx";
 import {Layout} from "antd";
-import {useState} from "react";
-import {LoginContext} from "./context/LoginContext.js";
 import {HeaderComponent} from "./components/HeaderComponent/HeaderComponent.jsx";
-import {LoadingContext} from "./context/LoadingContext.js";
 const {Footer} = Layout;
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
     return (
         <div className="App">
-            <LoginContext.Provider value={{isLoggedIn, setIsLoggedIn}}>
-                <LoadingContext.Provider value={{isLoading, setIsLoading}}>
                     <Layout style={{background: 'var(--bg)', color: 'var(--text)'}}>
                         <HeaderComponent/>
                         <Routing/>
@@ -25,8 +17,6 @@ function App() {
                                 borderBottom: '1px solid var(--border)'
                             }}>FOOTER</Footer>
                     </Layout>
-                </LoadingContext.Provider>
-            </LoginContext.Provider>
         </div>
     )
 }

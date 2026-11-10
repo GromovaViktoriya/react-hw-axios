@@ -1,17 +1,20 @@
 import {Button, Form, Input, message} from "antd";
-import {createItem} from "../../shared/api/apiMethods.js";
+import {useCreateTodo} from "../../shared/hooks/useTodos.js";
 
-export const CreateItemForm = ({setTodos}) => {
+export const CreateItemForm = () => {
     const [form] = Form.useForm();
+    const {mutate: createItem, isPending} = useCreateTodo()
 
     const onFinish = (values) => {
-        createItem(values).then((newTask) => {
-            setTodos(prev => [newTask, ...prev]);
-            form.resetFields();
-            message.success('Задача создана успешно!')
-        }).catch((error) => {
-            message.error(error.message);
-        })
+       createItem(values, {
+           onSuccess: () => {
+               message.success('Задача создана успешно!')
+               form.resetFields();
+           },
+           onError: (error) => {
+               message.error(error.message);
+           }
+       })
     }
     const onFinishFailed = (error) => {
       message.error(error.message);
@@ -45,7 +48,7 @@ export const CreateItemForm = ({setTodos}) => {
             </Form.Item>
 
             <Form.Item label={null}>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" loading={isPending}>
                     Создать
                 </Button>
             </Form.Item>

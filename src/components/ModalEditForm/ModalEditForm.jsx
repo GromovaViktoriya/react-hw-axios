@@ -1,17 +1,18 @@
 import {Form, Input, message, Modal} from "antd";
-import {updateItem} from "../../shared/api/apiMethods.js";
+import {useUpdateTodo} from "../../shared/hooks/useTodos.js";
 
-export const ModalEditForm = ({setTodos, task, isModalOpen, setIsModalOpen, form}) => {
+export const ModalEditForm = ({task, isModalOpen, setIsModalOpen, form}) => {
+    const {mutate: updateItem, isPending} = useUpdateTodo()
 
     const onFinishEdit = (values) => {
-        updateItem(task.id, values).then(() => {
-            setTodos(prev => prev.map(item =>
-                item.id === task.id ? {...item, ...values} : item
-            ));
-            setIsModalOpen(false);
-            message.success("Задача обновлена!");
-        }).catch(error => {
-            message.error(error.message || "Ошибка при обновлении задачи");
+        updateItem({taskId:task.id, values}, {
+            onSuccess: () => {
+                setIsModalOpen(false);
+                message.success("Задача обновлена!");
+            },
+            onError: (error) => {
+                message.error(error.message || "Ошибка при обновлении задачи");
+            }
         })
     }
     const okHandler = () => {
@@ -29,6 +30,7 @@ export const ModalEditForm = ({setTodos, task, isModalOpen, setIsModalOpen, form
             onOk={okHandler}
             okText="Сохранить"
             cancelText="Отмена"
+            confirmLoading={isPending}
             width={350}
             forceRender
             styles={{

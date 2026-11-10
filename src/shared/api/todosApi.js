@@ -1,31 +1,6 @@
 import axiosInstance from "./axiosInstance.js";
 
-export const register = async (values) => {
-    try {
-        const response = await axiosInstance.post(`/api/auth/register`, values);
-        return response.data;
-    } catch (error) {
-        return Promise.reject(error);
-    }
-}
 
-export const login = async (values) => {
-    try {
-        const response = await axiosInstance.post(`/api/auth/login`, values);
-        return response.data;
-    } catch (error) {
-        return Promise.reject(error);
-    }
-}
-
-export const authMe = async () => {
-    try {
-        const response = await axiosInstance.get(`/api/auth/me`);
-        return response.data;
-    } catch (error) {
-        return Promise.reject(error);
-    }
-}
 
 export const fetchData = async () => {
     try {
@@ -46,8 +21,8 @@ export const deleteItem = async (taskId) => {
 
 export const createItem = async (value) => {
     try {
-       const response = await axiosInstance.post(`/api/todos`, value);
-       return response.data;
+        const response = await axiosInstance.post(`/api/todos`, value);
+        return response.data;
     } catch (error) {
         return Promise.reject(error);
     }
@@ -62,7 +37,7 @@ export const getItemById = async (taskId) => {
     }
 }
 
-export const updateItem = async (taskId, values) => {
+export const updateItem = async ({taskId, values}) => {
     try {
         await axiosInstance.patch(`/api/todos/${taskId}`, values);
     } catch (error) {
@@ -72,10 +47,9 @@ export const updateItem = async (taskId, values) => {
 
 export const toggleTaskStatus = async (taskId) => {
     try {
-       const response = await axiosInstance.patch(`/api/todos/${taskId}/toggle`);
-       return response.data;
+        const response = await axiosInstance.patch(`/api/todos/${taskId}/toggle`);
+        return response.data;
     } catch (error) {
         return Promise.reject(error);
     }
 }
-

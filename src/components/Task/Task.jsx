@@ -1,54 +1,43 @@
 import {Card, Form, message, Popconfirm, Tag} from "antd";
 import {CheckOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import {useState} from "react";
-import {deleteItem, getItemById, toggleTaskStatus} from "../../shared/api/apiMethods.js";
 import {ModalEditForm} from "../ModalEditForm/ModalEditForm.jsx";
+import {useDeleteTodo, useToggleStatusTodo} from "../../shared/hooks/useTodos.js";
 
-export const Task = ({task, setTodos}) => {
+export const Task = ({task}) => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
+    const {mutate:toggleTaskStatus} = useToggleStatusTodo()
+    const {mutate: deleteTask, isPending} = useDeleteTodo()
 
     const editHandler = () => {
-        setIsLoading(true)
-        getItemById(task.id).then((res) => {
-            form.setFieldsValue({
-                title: res.title,
-                description: res.description,
-                completed: res.completed,
-            })
-        }).catch((error) => {
-            message.error(error.message);
-        }).finally(() => {
-            setIsLoading(false)
+        form.setFieldsValue({
+            title: task.title,
+            description: task.description,
+            completed: task.completed,
         })
         setIsModalOpen(true);
     }
 
     const checkHandler = () => {
-        setIsLoading(true)
-        toggleTaskStatus(task.id).then((task) => {
-            setTodos(prev => prev.map(item =>
-                item.id === task.id ? {...item, completed: !item.completed} : item
-            ));
-            message.success('Статус задачи изменён');
-        }).catch((error) => {
-            message.error(error.message);
-        }).finally(() => {
-            setIsLoading(false)
+        toggleTaskStatus(task.id, {
+            onSuccess: () => {
+                message.success('Статус задачи изменён');
+            },
+            onError: (error) => {
+                message.error(error.message);
+            }
         })
     }
 
     const handleConfirm = () => {
-        setIsLoading(true)
-        deleteItem(task.id).then(() => {
-            setTodos(prev => prev.filter(item => item.id !== task.id))
-            message.success('Задача удалена!');
-        }).catch((error) => {
-            message.error(error.message);
-        }).finally(() => {
-            setIsLoading(false)
+        deleteTask(task.id, {
+            onSuccess: () => {
+                message.success('Задача удалена!');
+            },
+            onError: (error) => {
+                message.error(error.message);
+            }
         })
     }
 
@@ -65,7 +54,7 @@ export const Task = ({task, setTodos}) => {
                         onConfirm={handleConfirm}
                         okText="Да"
                         cancelText="Нет"
-                        okButtonProps={{loading: isLoading}}
+                        okButtonProps={{loading: isPending}}
                     >
                         <DeleteOutlined key='bucket'/>
                     </Popconfirm>,
@@ -76,7 +65,6 @@ export const Task = ({task, setTodos}) => {
                 {task.completed && <Tag color='green' variant='outlined' className='tag'>Выполнено</Tag>}
             </Card>
             <ModalEditForm form={form}
-                           setTodos={setTodos}
                            task={task}
                            isModalOpen={isModalOpen}
                            setIsModalOpen={setIsModalOpen}
