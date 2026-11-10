@@ -1,17 +1,25 @@
 import {Task} from "../../components/Task/Task.jsx";
 import {CreateItemForm} from "../../components/CreateItemForm/CreateItemForm.jsx";
-import {Empty, message, Spin} from "antd";
+import {Button, Empty, message, Spin} from "antd";
 import {useTodos} from "../../shared/hooks/useTodos.js";
+import {ReloadOutlined} from "@ant-design/icons";
 
 export const Dashboard = () => {
-    const {data: todos = [], isLoading, isError, error} = useTodos()
+    const {data: todos = [], isLoading, isError, error, isFetching, refetch} = useTodos()
     if (isError) message.error(error.message);
 
     return (
         <div className="dashboard">
             Dashboard
+            <Button
+                icon={<ReloadOutlined/>}
+                onClick={() => refetch()}
+                loading={isFetching}
+            >
+                Обновить
+            </Button>
             <CreateItemForm/>
-            {isLoading ?
+            {isLoading || isFetching?
                 (<Spin size="large" style={{marginTop: '50px'}}/>)
                 : (<ul className='dashboard-list'>
                     {todos.data.length > 0
